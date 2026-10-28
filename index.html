@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c2e">
+  <meta name="description" content="化工概論英語是非題、中文先備知識、逐題詳解、錯題複習與分類成效分析。">
+  <title>化工概論學習實驗室｜English Practice</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="回到首頁">
+        <span class="brand-mark">CE</span>
+        <span><strong>化工學習實驗室</strong><small>CHEMICAL ENGINEERING</small></span>
+      </a>
+      <div class="sidebar-label">學習工作區</div>
+      <nav class="main-nav" aria-label="主選單">
+        <button class="nav-item active" data-view="practice"><span class="nav-icon">◉</span>測驗練習 <span class="nav-count" id="nav-question-count">42</span></button>
+        <button class="nav-item" data-view="learn"><span class="nav-icon">▤</span>分類學習區</button>
+        <button class="nav-item" data-view="analytics"><span class="nav-icon">▥</span>學習分析</button>
+        <button class="nav-item" data-view="review"><span class="nav-icon">↻</span>錯題與收藏 <span class="nav-count" id="nav-review-count">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-progress-label"><span>整體學習進度</span><b id="side-progress-number">0%</b></div>
+        <div class="side-progress"><span id="side-progress-bar"></span></div>
+        <p>進度會保存在此瀏覽器，不需要登入。</p>
+        <button class="text-button" id="export-progress">匯出我的學習紀錄 ↗</button>
+      </div>
+    </aside>
+
+    <main class="main-content" id="top">
+      <header class="topbar">
+        <div class="breadcrumb"><span>學習工作區</span><span class="crumb-sep">/</span><strong id="current-section-label">測驗練習</strong></div>
+        <div class="topbar-actions"><span class="local-save"><i></i> 本機自動儲存</span><button id="reset-progress" class="button button-quiet button-small">重設紀錄</button></div>
+      </header>
+
+      <section class="view active" id="view-practice">
+        <div class="hero-row">
+          <div class="hero-copy">
+            <div class="eyebrow">CHEMICAL ENGINEERING · MIDTERM PREP</div>
+            <h1>先理解，再答對。</h1>
+            <p>用英文判斷化工概念，用中文補足原理。每一道題都連到對應先備知識，從錯題看見下一步要補強的觀念。</p>
+            <div class="hero-tags"><span>英語命題</span><span>中文詳解</span><span>分類追蹤</span></div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-core">CE<span>LAB</span></div>
+            <span class="float-chip chip-a">MASS BALANCE</span><span class="float-chip chip-b">THERMO</span><span class="float-chip chip-c">TRANSFER</span>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-top"><span>題庫規模</span><span class="metric-icon icon-blue">▤</span></div><strong id="metric-total">42</strong><small>內附補充練習題</small></article>
+          <article class="metric-card"><div class="metric-top"><span>已作答</span><span class="metric-icon icon-teal">✓</span></div><strong id="metric-attempted">0</strong><small id="metric-attempted-sub">尚未建立作答紀錄</small></article>
+          <article class="metric-card"><div class="metric-top"><span>累積答對率</span><span class="metric-icon icon-amber">↗</span></div><strong id="metric-accuracy">—</strong><small>以已批改題目計算</small></article>
+          <article class="metric-card"><div class="metric-top"><span>待複習</span><span class="metric-icon icon-rose">↻</span></div><strong id="metric-review">0</strong><small>錯題與未掌握觀念</small></article>
+        </div>
+
+        <div class="section-heading practice-heading"><div><div class="eyebrow">PRACTICE MODE</div><h2>開始一輪練習</h2><p>每回合 3 題；整回合作答後統一批改，避免太早看到答案。</p></div><button id="jump-learning" class="button button-outline">先讀分類知識 <span>↗</span></button></div>
+        <div class="practice-layout">
+          <section class="panel setup-panel">
+            <div class="panel-heading"><div><span class="step-number">01</span><h3>設定練習範圍</h3></div><span class="panel-kicker">SETUP</span></div>
+            <label class="field-label" for="category-filter">題目分類</label>
+            <select id="category-filter" class="field-control"><option value="all">全部分類</option></select>
+            <div class="field-grid">
+              <div><label class="field-label" for="difficulty-filter">難度</label><select id="difficulty-filter" class="field-control"><option value="all">全部難度</option><option value="1">基礎</option><option value="2">進階</option></select></div>
+              <div><label class="field-label" for="mode-filter">題目順序</label><select id="mode-filter" class="field-control"><option value="random">隨機抽題</option><option value="sequential">依題號順序</option></select></div>
+            </div>
+            <div class="setup-note"><span class="note-icon">i</span><span>已作答題目仍可再次練習；歷史紀錄會另行統計。隨機模式不會在同一輪重複出題。</span></div>
+            <button class="button button-primary button-block" id="start-quiz">開始練習 <span>→</span></button>
+          </section>
+          <section class="panel category-snapshot">
+            <div class="panel-heading"><div><span class="step-number step-muted">02</span><h3>分類掌握概況</h3></div><button class="link-button" data-goto="analytics">查看分析 →</button></div>
+            <div id="snapshot-list" class="snapshot-list"></div>
+          </section>
+        </div>
+
+        <section class="panel quiz-panel hidden" id="quiz-panel">
+          <div class="quiz-panel-top">
+            <div><div class="eyebrow" id="quiz-round-label">ROUND 01</div><h2 id="quiz-title">本回合題目</h2><p id="quiz-instruction">請先回答所有題目，再統一提交。</p></div>
+            <div class="quiz-status"><strong id="round-progress">0 / 3</strong><span>已選答案</span></div>
+          </div>
+          <div class="quiz-progress-track"><span id="quiz-progress-bar"></span></div>
+          <div id="quiz-questions" class="quiz-question-list"></div>
+          <div class="quiz-footer"><span id="quiz-hint" class="subtle">每題選擇 True 或 False。</span><div class="quiz-actions"><button id="quit-quiz" class="button button-quiet">結束本輪</button><button id="submit-round" class="button button-primary" disabled>提交本回合 <span>→</span></button><button id="next-round" class="button button-primary hidden">下一回合 <span>→</span></button><button id="finish-quiz" class="button button-primary hidden">查看本次分析 <span>↗</span></button></div></div>
+        </section>
+
+        <section class="panel session-result hidden" id="session-result">
+          <div class="result-header"><div><div class="eyebrow">SESSION SUMMARY</div><h2>本次練習總結</h2><p id="session-summary-text"></p></div><div class="result-score" id="session-score">—</div></div>
+          <div id="session-category-results" class="session-category-results"></div>
+          <div id="session-wrongs" class="session-wrongs"></div>
+          <div class="result-actions"><button class="button button-outline" id="result-review-wrongs">複習本次錯題</button><button class="button button-primary" id="new-quiz-from-result">再練一輪 <span>→</span></button></div>
+        </section>
+        <div class="source-note"><strong>內容說明：</strong>目前內附題目是依化工概論常見先備知識撰寫的英文補充練習，並非已核對的原網站 107 題逐題翻譯版。原始逐題內容、題號及投影片頁碼需取得可讀取的完整題庫後才能準確還原。<a href="https://jerryhsu111111.github.io/midterm_practice/" target="_blank" rel="noopener noreferrer">開啟原始題庫 ↗</a></div>
+      </section>
+
+      <section class="view" id="view-learn">
+        <div class="page-heading"><div class="eyebrow">KNOWLEDGE BASE</div><h1>分類學習區</h1><p>先備知識 → 核心概念 → 公式整理 → 常見誤解。從詳解中的知識連結，可直接回到對應章節。</p></div>
+        <div class="learn-layout">
+          <aside class="panel learn-sidebar"><h3>課程分類</h3><div id="lesson-nav" class="lesson-nav"></div><div class="learn-tip"><strong>建議讀法</strong><p>先讀先備知識，再看公式與常見誤解，最後回到該分類作答驗收。</p></div></aside>
+          <article id="lesson-detail" class="lesson-detail"></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-analytics">
+        <div class="page-heading"><div class="eyebrow">PERFORMANCE INSIGHTS</div><h1>學習分析</h1><p>分析已批改作答，不把未作答題目算入答對率。分類樣本不足時，圖表會同時顯示已作答數量。</p></div>
+        <div class="analytics-kpis" id="analytics-kpis"></div>
+        <div class="analytics-grid">
+          <section class="panel chart-panel"><div class="panel-heading"><div><h3>各分類答對率</h3><p>比較分類與答題正確表現</p></div><span class="panel-kicker">BY CATEGORY</span></div><div id="category-chart" class="bar-chart"></div><div class="chart-legend"><span><i class="legend-dot dot-correct"></i>答對率</span><span><i class="legend-dot dot-neutral"></i>未作答分類無法估計</span></div></section>
+          <section class="panel chart-panel"><div class="panel-heading"><div><h3>作答結果分布</h3><p>以歷史批改題目為母數</p></div><span class="panel-kicker">OVERALL</span></div><div id="outcome-chart" class="outcome-chart"></div><div id="outcome-legend" class="outcome-legend"></div></section>
+          <section class="panel chart-panel wide-chart"><div class="panel-heading"><div><h3>分類作答量 × 答對率</h3><p>同時看練習量與掌握度，避免只憑少量題目下結論</p></div><span class="panel-kicker">VOLUME × ACCURACY</span></div><div id="volume-chart" class="volume-chart"></div></section>
+          <section class="panel recommendations-panel"><div class="panel-heading"><div><h3>下一步建議</h3><p>依目前答題紀錄自動整理</p></div><span class="panel-kicker">NEXT STEPS</span></div><div id="recommendations"></div></section>
+        </div>
+      </section>
+
+      <section class="view" id="view-review">
+        <div class="page-heading"><div class="eyebrow">REVIEW & RETRIEVAL</div><h1>錯題與收藏</h1><p>錯題會自動進入複習清單。重答正確後可降低待複習數，但歷史錯誤紀錄仍會保留供分析。</p></div>
+        <div class="review-controls panel"><div class="segmented" role="group" aria-label="清單類型"><button class="segment active" data-review-mode="wrong">待複習錯題 <span id="review-wrong-count">0</span></button><button class="segment" data-review-mode="saved">我的收藏 <span id="review-saved-count">0</span></button><button class="segment" data-review-mode="all">全部題目</button></div><input type="search" id="review-search" class="field-control search-field" placeholder="搜尋英文題目或中文觀念…" aria-label="搜尋錯題"></div>
+        <div id="review-list" class="review-list"></div>
+      </section>
+
+      <footer class="app-footer"><span>CHEM ENG STUDY LAB · 靜態網站，可直接部署 GitHub Pages</span><span>學習進度只儲存在目前瀏覽器</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
