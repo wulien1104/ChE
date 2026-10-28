@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101c2e">
   <meta name="description" content="化工概論英語是非題、中文先備知識、逐題詳解、錯題複習與分類成效分析。">
-  <title>化工概論學習實驗室｜English Practice</title>
+  <title>化工概論學習實驗室｜期中考練習</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="data.js"></script>
   <script defer src="app.js"></script>
@@ -19,7 +19,7 @@
       </a>
       <div class="sidebar-label">學習工作區</div>
       <nav class="main-nav" aria-label="主選單">
-        <button class="nav-item active" data-view="practice"><span class="nav-icon">◉</span>測驗練習 <span class="nav-count" id="nav-question-count">42</span></button>
+        <button class="nav-item active" data-view="practice"><span class="nav-icon">◉</span>測驗練習 <span class="nav-count" id="nav-question-count">193</span></button>
         <button class="nav-item" data-view="learn"><span class="nav-icon">▤</span>分類學習區</button>
         <button class="nav-item" data-view="analytics"><span class="nav-icon">▥</span>學習分析</button>
         <button class="nav-item" data-view="review"><span class="nav-icon">↻</span>錯題與收藏 <span class="nav-count" id="nav-review-count">0</span></button>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="metric-grid">
-          <article class="metric-card"><div class="metric-top"><span>題庫規模</span><span class="metric-icon icon-blue">▤</span></div><strong id="metric-total">42</strong><small>內附補充練習題</small></article>
+          <article class="metric-card"><div class="metric-top"><span>題庫規模</span><span class="metric-icon icon-blue">▤</span></div><strong id="metric-total">193</strong><small>107 原題＋44 期中風格題＋42 基礎題</small></article>
           <article class="metric-card"><div class="metric-top"><span>已作答</span><span class="metric-icon icon-teal">✓</span></div><strong id="metric-attempted">0</strong><small id="metric-attempted-sub">尚未建立作答紀錄</small></article>
           <article class="metric-card"><div class="metric-top"><span>累積答對率</span><span class="metric-icon icon-amber">↗</span></div><strong id="metric-accuracy">—</strong><small>以已批改題目計算</small></article>
           <article class="metric-card"><div class="metric-top"><span>待複習</span><span class="metric-icon icon-rose">↻</span></div><strong id="metric-review">0</strong><small>錯題與未掌握觀念</small></article>
@@ -66,7 +66,7 @@
             <label class="field-label" for="category-filter">題目分類</label>
             <select id="category-filter" class="field-control"><option value="all">全部分類</option></select>
             <div class="field-grid">
-              <div><label class="field-label" for="difficulty-filter">難度</label><select id="difficulty-filter" class="field-control"><option value="all">全部難度</option><option value="1">基礎</option><option value="2">進階</option></select></div>
+              <div><label class="field-label" for="difficulty-filter">難度</label><select id="difficulty-filter" class="field-control"><option value="all">全部難度</option><option value="1">基礎</option><option value="2">進階</option><option value="3">期中考應用</option></select></div>
               <div><label class="field-label" for="mode-filter">題目順序</label><select id="mode-filter" class="field-control"><option value="random">隨機抽題</option><option value="sequential">依題號順序</option></select></div>
             </div>
             <div class="setup-note"><span class="note-icon">i</span><span>已作答題目仍可再次練習；歷史紀錄會另行統計。隨機模式不會在同一輪重複出題。</span></div>
@@ -94,7 +94,7 @@
           <div id="session-wrongs" class="session-wrongs"></div>
           <div class="result-actions"><button class="button button-outline" id="result-review-wrongs">複習本次錯題</button><button class="button button-primary" id="new-quiz-from-result">再練一輪 <span>→</span></button></div>
         </section>
-        <div class="source-note"><strong>內容說明：</strong>目前內附題目是依化工概論常見先備知識撰寫的英文補充練習，並非已核對的原網站 107 題逐題翻譯版。原始逐題內容、題號及投影片頁碼需取得可讀取的完整題庫後才能準確還原。<a href="https://jerryhsu111111.github.io/midterm_practice/" target="_blank" rel="noopener noreferrer">開啟原始題庫 ↗</a></div>
+        <div class="source-note"><strong>題庫來源：</strong>包含依原始文字題庫轉寫的 107 道英文是非題、依 ChE_01–04 與 2026 期中範例自編的 44 道期中考風格題，以及原先保留的 42 道基礎補充題。原題保留題號與投影片出處；新編題為練習用，並非教師提供的正式考題。<a href="https://jerryhsu111111.github.io/midterm_practice/" target="_blank" rel="noopener noreferrer">開啟原始題庫 ↗</a></div>
       </section>
 
       <section class="view" id="view-learn">

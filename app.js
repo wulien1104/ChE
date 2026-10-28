@@ -35,6 +35,16 @@
     return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
   function accuracy(correct, total) { return total ? Math.round(correct / total * 100) : null; }
+  function questionLabel(q) {
+    if (q.originalNo) return `原題 ${q.originalNo}`;
+    if (q.sourceType === 'midterm-style-practice') return `期中練習 ${q.id}`;
+    return `基礎練習 ${q.id}`;
+  }
+  function difficultyLabel(q) { return q.difficulty === 1 ? 'FOUNDATION' : q.difficulty === 3 ? 'MIDTERM APPLIED' : 'INTERMEDIATE'; }
+  function questionSource(q) {
+    const parts = [q.lecture, q.sourceRef].filter(Boolean);
+    return parts.length ? `<div class="question-source">出處：${escapeHtml(parts.join(' · '))}</div>` : '';
+  }
   function shuffle(items) {
     const arr = [...items];
     for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
@@ -194,8 +204,9 @@
         </div>
       </div>
       <section class="panel related-questions"><div class="related-questions-header"><h3>本章節連結題目</h3><span class="panel-kicker">QUESTION LINKS</span></div>
-        ${related.map(q => `<div class="related-question-row"><p><b>${q.id}</b> · ${escapeHtml(q.statement)}</p><button data-start-single="${q.id}">練習此題 →</button></div>`).join('')}
-      </section>`;
+        ${related.map(q => `<div class="related-question-row"><p><b>${escapeHtml(questionLabel(q))}</b> · ${escapeHtml(q.statement)}${q.sourceRef ? `<small class="related-source">${escapeHtml(q.sourceRef)}</small>` : ''}</p><button data-start-single="${q.id}">練習此題 →</button></div>`).join('')}
+      </section>
+      ${lesson.sources?.length ? `<section class="panel lesson-section lesson-sources"><h3>教材依據與出處</h3><ul>${lesson.sources.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></section>` : ''}`;
     holder.querySelectorAll('[data-start-category]').forEach(button => button.addEventListener('click', () => { $('#category-filter').value = lesson.id; $('#difficulty-filter').value = 'all'; navigate('practice'); startQuiz(); }));
     holder.querySelectorAll('[data-start-single]').forEach(button => button.addEventListener('click', () => {
       const id = button.dataset.startSingle;
@@ -212,7 +223,7 @@
   function startQuiz(options = {}) {
     const list = options.ids ? options.ids.map(id => qById.get(id)).filter(Boolean) : getFilteredQuestions();
     if (!list.length) { toast('此範圍目前沒有題目，請調整分類或難度。'); return; }
-    let selected = options.ids ? [...list] : ($('#mode-filter').value === 'random' ? shuffle(list) : [...list].sort((a, b) => a.id.localeCompare(b.id)));
+    let selected = options.ids ? [...list] : ($('#mode-filter').value === 'random' ? shuffle(list) : [...list].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999)));
     session = { deck: selected.map(q => q.id), offset: 0, answers: {}, results: [], startedAt: Date.now(), revealed: false, stopped: false };
     $('#session-result').classList.add('hidden');
     $('#quiz-panel').classList.remove('hidden');
@@ -246,7 +257,8 @@
     const saved = state.saved.includes(q.id);
     const feedback = showFeedback ? questionFeedback(q, chosen) : '';
     return `<article class="question-card" data-question-card="${q.id}">
-      <div class="question-top"><span class="question-id">${q.id} · ${String(q.difficulty === 1 ? 'FOUNDATION' : 'INTERMEDIATE')}</span><span class="question-category">${escapeHtml(category?.short || q.category)}</span></div>
+      <div class="question-top"><span class="question-id">${escapeHtml(questionLabel(q))} · ${difficultyLabel(q)}</span><span class="question-category">${escapeHtml(category?.short || q.category)}</span></div>
+      ${questionSource(q)}
       <p class="question-statement">${escapeHtml(q.statement)}</p>
       <div class="question-answers" role="group" aria-label="Choose True or False">
         <button class="answer-option ${chosen === true ? 'selected' : ''} ${showFeedback && q.answer ? 'correct' : ''} ${showFeedback && chosen === true && !q.answer ? 'incorrect' : ''}" data-answer="true" ${showFeedback ? 'disabled' : ''}>True</button>
@@ -466,7 +478,7 @@
     let questions = DATA.questions;
     if (reviewMode === 'wrong') questions = questions.filter(q => latest.has(q.id) && !latest.get(q.id).correct);
     else if (reviewMode === 'saved') questions = questions.filter(q => state.saved.includes(q.id));
-    questions = questions.filter(q => !search || q.statement.toLowerCase().includes(search) || q.explanation.toLowerCase().includes(search) || q.misconception.toLowerCase().includes(search) || categoryById.get(q.category).name.toLowerCase().includes(search));
+    questions = questions.filter(q => !search || q.statement.toLowerCase().includes(search) || q.explanation.toLowerCase().includes(search) || q.misconception.toLowerCase().includes(search) || categoryById.get(q.category)?.name.toLowerCase().includes(search) || String(q.sourceRef || '').toLowerCase().includes(search) || String(q.originalNo || '').includes(search));
     if (!questions.length) {
       const message = reviewMode === 'wrong' ? '目前沒有待複習錯題' : reviewMode === 'saved' ? '尚未收藏題目' : '沒有符合搜尋條件的題目';
       const detail = reviewMode === 'wrong' ? '完成測驗後，最近一次答錯的題目會自動出現在這裡。答對後便會離開待複習清單。' : '在測驗題目卡片按「收藏題目」，就能把易混淆的概念留在這裡。';
@@ -480,7 +492,8 @@
       const category = categoryById.get(q.category);
       const correctText = `標準答案：${q.answer ? 'True' : 'False'}。`;
       return `<article class="review-card">
-        <div class="review-card-top"><div class="review-card-meta"><span class="question-id">${q.id}</span><span class="question-category">${escapeHtml(category.short)}</span>${pending ? '<span class="status-pill wrong">待複習</span>' : latestAttempt ? '<span class="status-pill correct">最近答對</span>' : ''}${isSaved ? '<span class="status-pill saved">已收藏</span>' : ''}</div><span class="panel-kicker">${q.difficulty === 1 ? 'FOUNDATION' : 'INTERMEDIATE'}</span></div>
+        <div class="review-card-top"><div class="review-card-meta"><span class="question-id">${escapeHtml(questionLabel(q))}</span><span class="question-category">${escapeHtml(category.short)}</span>${pending ? '<span class="status-pill wrong">待複習</span>' : latestAttempt ? '<span class="status-pill correct">最近答對</span>' : ''}${isSaved ? '<span class="status-pill saved">已收藏</span>' : ''}</div><span class="panel-kicker">${difficultyLabel(q)}</span></div>
+        ${questionSource(q)}
         <p class="review-statement">${escapeHtml(q.statement)}</p>
         <p class="review-explanation"><b>${correctText}</b>${escapeHtml(q.explanation)}</p>
         <p class="review-explanation"><b>另一選項的常見誤解：</b>${escapeHtml(q.misconception)}</p>
